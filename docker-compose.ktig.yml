@@ -1,0 +1,65 @@
+version: "3"
+
+services:
+    zookeeper:
+        image: wurstmeister/zookeeper
+        environment:
+            - JAVA_OPTS="-Xms256m -Xmx256m"
+        ports:
+            - "2181:2181"
+    kafka:
+        image: wurstmeister/kafka
+        environment:
+            KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+            KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+            KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+            KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+            JAVA_OPTS: "-Xms256m -Xmx256m"
+        ports:
+            - "9092:9092"
+        depends_on:
+            - zookeeper
+    influxdb:
+        image: influxdb:latest
+        ports:
+            - "8083:8083"
+            - "8086:8086"
+            - "8090:8090"
+        depends_on:
+            - zookeeper
+            - grafana
+            - kafka
+        volumes:
+            - ./influxdb/data:/var/lib/influxdb
+    
+    grafana:
+        image: grafana/grafana:latest
+        ports:
+            - "3000:3000"
+        environment:
+            - GF_INSTALL_PLUGINS=grafana-clock-panel,briangann-gauge-panel,natel-plotly-panel,grafana-simple-json-datasource
+        user: "0"
+        depends_on:
+            - influxdb
+        volumes:
+            - ./grafana/data:/var/lib/grafana
+    chronograf:
+        image: chronograf:latest
+        depends_on:
+            - influxdb
+        ports:
+            - "8888:8888"
+    telegraf:
+        image: telegraf:latest
+        depends_on:
+            - grafana
+            - zookeeper
+            - influxdb
+            - kafka
+        deploy:
+            restart_policy:
+                condition: on-failure
+                delay: 5s
+                max_attempts: 6
+        volumes:
+            - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
