@@ -13,8 +13,7 @@ services:
             - 80:80
     flask:
         build:
-            # context: /opt/srv6-pm-flask
-            context: /home/francesco/Workspace/srv6/srv6-pm-flask
+            context: /opt/srv6-pm-flask
             dockerfile: Dockerfile
         image: roseexpman:beta
         networks:
