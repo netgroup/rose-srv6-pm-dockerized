@@ -2,13 +2,13 @@
 
 # setup_frr.sh
 
-WORKSPACE="$HOME/Workspace"
+WORKSPACE="$HOME/workspace"
 
-FLASK_APP="$WORKSPACE/srv6-pm-flask"
+FLASK_APP="$WORKSPACE/rose-srv6-pm-flask"
 
 DASHBOARD_REPO="$WORKSPACE/rose-dashboard"
 
-DOCKERIZED_REPO="$WORKSPACE/srv6-pm-dockerized"
+DOCKERIZED_REPO="$WORKSPACE/rose-srv6-pm-dockerized"
 
 cd $FLASK_APP
 
