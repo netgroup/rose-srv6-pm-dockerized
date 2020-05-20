@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# setup_frr.sh
 
 WORKSPACE="$HOME/workspace"
 
