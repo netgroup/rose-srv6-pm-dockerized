@@ -42,10 +42,6 @@ services:
         user: "0"
         depends_on:
             - influxdb
-        deploy:
-            restart_policy:
-                condition: unless-stopped
-                delay: 3s
         volumes:
             - ./grafana/data:/var/lib/grafana
     chronograf:
