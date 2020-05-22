@@ -7,10 +7,7 @@ services:
             - JAVA_OPTS="-Xms256m -Xmx256m"
         ports:
             - "2181:2181"
-        deploy:
-            restart_policy:
-                condition: unless-stopped
-                delay: 3s
+
     kafka:
         image: wurstmeister/kafka
         environment:
@@ -21,10 +18,6 @@ services:
             JAVA_OPTS: "-Xms256m -Xmx256m"
         ports:
             - "9092:9092"
-        deploy:
-            restart_policy:
-                condition: unless-stopped
-                delay: 3s
         depends_on:
             - zookeeper
     influxdb:
@@ -37,10 +30,6 @@ services:
             - zookeeper
             - grafana
             - kafka
-        deploy:
-            restart_policy:
-                condition: unless-stopped
-                delay: 3s
         volumes:
             - ./influxdb/data:/var/lib/influxdb
     
@@ -65,10 +54,6 @@ services:
             - influxdb
         ports:
             - "8888:8888"
-        deploy:
-            restart_policy:
-                condition: unless-stopped
-                delay: 3s
     telegraf:
         image: telegraf:latest
         depends_on:
@@ -78,7 +63,6 @@ services:
             - kafka
         deploy:
             restart_policy:
-                condition: unless-stopped
                 delay: 3s
         volumes:
             - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
